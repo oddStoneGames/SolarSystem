@@ -508,7 +508,7 @@ void SolarSystem::RenderLoop()
 
 		#pragma region Set Lighting Uniforms
 
-		m_LightShader.setVector3("pointLight.position", 0.0f, 2.0f, 0.0f);
+		m_LightShader.setVector3("pointLight.position", 0.0f, 0.0f, 0.0f);
 		m_LightShader.setVector3("pointLight.color", 1.0f, 1.0f, 1.0f);
 		m_LightShader.setFloat("pointLight.intensity", 50.0f);
 
