@@ -1,0 +1,286 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.4.50",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Uranus"
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "name" : "Uranus",
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 0
+                },
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.7009299397468567
+            }
+        },
+        {
+            "alphaMode" : "BLEND",
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                0.7467212677001953,
+                0.7467212677001953,
+                0.7467212677001953
+            ],
+            "emissiveTexture" : {
+                "index" : 1
+            },
+            "name" : "Ring",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0,
+                    0,
+                    0,
+                    0.019950568675994873
+                ],
+                "baseColorTexture" : {
+                    "index" : 2
+                },
+                "metallicFactor" : 0,
+                "metallicRoughnessTexture" : {
+                    "index" : 3
+                },
+                "roughnessFactor" : 0.11115316301584244
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Uranus",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "TEXCOORD_0" : 1,
+                        "NORMAL" : 2,
+                        "TANGENT" : 3
+                    },
+                    "indices" : 4,
+                    "material" : 0
+                },
+                {
+                    "attributes" : {
+                        "POSITION" : 5,
+                        "TEXCOORD_0" : 6,
+                        "NORMAL" : 7,
+                        "TANGENT" : 8
+                    },
+                    "indices" : 9,
+                    "material" : 1
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        },
+        {
+            "sampler" : 0,
+            "source" : 1
+        },
+        {
+            "sampler" : 0,
+            "source" : 2
+        },
+        {
+            "sampler" : 0,
+            "source" : 3
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "material_baseColor",
+            "uri" : "material_baseColor.jpg"
+        },
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "material_2_emissive",
+            "uri" : "material_2_emissive.jpg"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "material_2_baseColor",
+            "uri" : "material_2_baseColor.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "material_2_metallicRoughness",
+            "uri" : "material_2_metallicRoughness.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 2143,
+            "max" : [
+                4.147599697113037,
+                4.140044212341309,
+                4.10164213180542
+            ],
+            "min" : [
+                -4.132490634918213,
+                -4.140047550201416,
+                -4.178449630737305
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 2143,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 2143,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5126,
+            "count" : 2143,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5123,
+            "count" : 11904,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 284,
+            "max" : [
+                9.394039154052734,
+                -9.5367431640625e-07,
+                9.348082542419434
+            ],
+            "min" : [
+                -9.378931045532227,
+                -1.9073486328125e-06,
+                -9.424891471862793
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 284,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5126,
+            "count" : 284,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 8,
+            "componentType" : 5126,
+            "count" : 284,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 9,
+            "componentType" : 5123,
+            "count" : 408,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 25716,
+            "byteOffset" : 0,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 17144,
+            "byteOffset" : 25716,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 25716,
+            "byteOffset" : 42860,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 34288,
+            "byteOffset" : 68576,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 23808,
+            "byteOffset" : 102864,
+            "target" : 34963
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 3408,
+            "byteOffset" : 126672,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2272,
+            "byteOffset" : 130080,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 3408,
+            "byteOffset" : 132352,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 4544,
+            "byteOffset" : 135760,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 816,
+            "byteOffset" : 140304,
+            "target" : 34963
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 141120,
+            "uri" : "Uranus.bin"
+        }
+    ]
+}

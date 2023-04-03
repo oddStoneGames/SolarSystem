@@ -1,0 +1,190 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.4.50",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Earth"
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                1,
+                1,
+                1
+            ],
+            "emissiveTexture" : {
+                "index" : 0
+            },
+            "name" : "Material",
+            "normalTexture" : {
+                "index" : 1
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 2
+                },
+                "metallicFactor" : 0.07467212527990341,
+                "metallicRoughnessTexture" : {
+                    "index" : 3
+                }
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Earth",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "TEXCOORD_0" : 1,
+                        "NORMAL" : 2,
+                        "TANGENT" : 3
+                    },
+                    "indices" : 4,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        },
+        {
+            "sampler" : 0,
+            "source" : 1
+        },
+        {
+            "sampler" : 0,
+            "source" : 2
+        },
+        {
+            "sampler" : 0,
+            "source" : 3
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "Material.001_emissive",
+            "uri" : "Material_001_emissive.jpg"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "Material.001_normal",
+            "uri" : "Material_001_normal.png"
+        },
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "Material.001_baseColor",
+            "uri" : "Material_001_baseColor.jpg"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "Material.001_metallicRoughness",
+            "uri" : "Material_001_metallicRoughness.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 4223,
+            "max" : [
+                4.901875972747803,
+                4.901877403259277,
+                4.946090221405029
+            ],
+            "min" : [
+                -4.901876926422119,
+                -4.901877403259277,
+                -4.857661724090576
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 4223,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 4223,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5126,
+            "count" : 4223,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5123,
+            "count" : 24192,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 50676,
+            "byteOffset" : 0,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 33784,
+            "byteOffset" : 50676,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 50676,
+            "byteOffset" : 84460,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 67568,
+            "byteOffset" : 135136,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 48384,
+            "byteOffset" : 202704,
+            "target" : 34963
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 251088,
+            "uri" : "Earth.bin"
+        }
+    ]
+}

@@ -1,0 +1,302 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.4.50",
+        "version" : "2.0"
+    },
+    "extensionsUsed" : [
+        "KHR_materials_specular"
+    ],
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Neptune"
+        }
+    ],
+    "materials" : [
+        {
+            "alphaMode" : "BLEND",
+            "emissiveFactor" : [
+                0.0013906462118029594,
+                0.0008250056416727602,
+                0.11647437512874603
+            ],
+            "name" : "Clouds",
+            "normalTexture" : {
+                "index" : 0,
+                "scale" : 0.07488567382097244
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.38586127758026123,
+                    0.38586127758026123,
+                    0.38586127758026123,
+                    0.23951981961727142
+                ],
+                "baseColorTexture" : {
+                    "index" : 1
+                },
+                "metallicFactor" : 0,
+                "metallicRoughnessTexture" : {
+                    "index" : 2
+                }
+            }
+        },
+        {
+            "extensions" : {
+                "KHR_materials_specular" : {
+                    "specularColorFactor" : [
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "name" : "Neptune",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.715129554271698,
+                    0.715129554271698,
+                    0.715129554271698,
+                    1
+                ],
+                "baseColorTexture" : {
+                    "index" : 3
+                },
+                "metallicFactor" : 0.20000004768371582,
+                "metallicRoughnessTexture" : {
+                    "index" : 4
+                },
+                "roughnessFactor" : 0.8736661672592163
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Neptune",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "TEXCOORD_0" : 1,
+                        "NORMAL" : 2,
+                        "TANGENT" : 3
+                    },
+                    "indices" : 4,
+                    "material" : 0
+                },
+                {
+                    "attributes" : {
+                        "POSITION" : 5,
+                        "TEXCOORD_0" : 6,
+                        "NORMAL" : 7,
+                        "TANGENT" : 8
+                    },
+                    "indices" : 4,
+                    "material" : 1
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        },
+        {
+            "sampler" : 0,
+            "source" : 1
+        },
+        {
+            "sampler" : 0,
+            "source" : 2
+        },
+        {
+            "sampler" : 0,
+            "source" : 3
+        },
+        {
+            "sampler" : 0,
+            "source" : 4
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "Atmosfera_normal",
+            "uri" : "Atmosfera_normal.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "Atmosfera_baseColor",
+            "uri" : "Atmosfera_baseColor.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "Atmosfera_metallicRoughness",
+            "uri" : "Atmosfera_metallicRoughness.png"
+        },
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "Planeta_baseColor",
+            "uri" : "Planeta_baseColor.jpg"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "Planeta_metallicRoughness",
+            "uri" : "Planeta_metallicRoughness.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 2143,
+            "max" : [
+                5.000001430511475,
+                5.094981670379639,
+                5.047482490539551
+            ],
+            "min" : [
+                -4.999997615814209,
+                -4.905018329620361,
+                -4.952517509460449
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 2143,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 2143,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5126,
+            "count" : 2143,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5123,
+            "count" : 11904,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 2143,
+            "max" : [
+                5.000001430511475,
+                5.094981670379639,
+                5.047482490539551
+            ],
+            "min" : [
+                -4.999997615814209,
+                -4.905018329620361,
+                -4.952517509460449
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 2143,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5126,
+            "count" : 2143,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 8,
+            "componentType" : 5126,
+            "count" : 2143,
+            "type" : "VEC4"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 25716,
+            "byteOffset" : 0,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 17144,
+            "byteOffset" : 25716,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 25716,
+            "byteOffset" : 42860,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 34288,
+            "byteOffset" : 68576,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 23808,
+            "byteOffset" : 102864,
+            "target" : 34963
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 25716,
+            "byteOffset" : 126672,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 17144,
+            "byteOffset" : 152388,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 25716,
+            "byteOffset" : 169532,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 34288,
+            "byteOffset" : 195248,
+            "target" : 34962
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 229536,
+            "uri" : "Neptune.bin"
+        }
+    ]
+}
