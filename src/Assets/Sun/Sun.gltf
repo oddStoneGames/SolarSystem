@@ -3,6 +3,9 @@
         "generator" : "Khronos glTF Blender I/O v3.4.50",
         "version" : "2.0"
     },
+    "extensionsUsed" : [
+        "KHR_materials_emissive_strength"
+    ],
     "scene" : 0,
     "scenes" : [
         {
@@ -20,6 +23,7 @@
     ],
     "materials" : [
         {
+            "doubleSided" : true,
             "emissiveFactor" : [
                 1,
                 1,
@@ -28,7 +32,12 @@
             "emissiveTexture" : {
                 "index" : 0
             },
-            "name" : "Material.001",
+            "extensions" : {
+                "KHR_materials_emissive_strength" : {
+                    "emissiveStrength" : 8
+                }
+            },
+            "name" : "Material",
             "normalTexture" : {
                 "index" : 1
             },
