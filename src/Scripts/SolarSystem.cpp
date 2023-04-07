@@ -118,7 +118,6 @@ bool SolarSystem::Init()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glDepthFunc(GL_LESS);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// Enable seamless cubemap sampling for lower mip levels in the pre-filter map.
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
@@ -244,7 +243,7 @@ bool SolarSystem::Init()
 
 	#pragma endregion
 
-	#pragma region Render HDR Framebuffer
+	#pragma region HDR Framebuffer
 
 	glGenFramebuffers(1, &m_RenderFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderFBO);
@@ -320,11 +319,6 @@ bool SolarSystem::Init()
 	m_PostProcessingShader.setInt("screenTexture", 0);
 	m_PostProcessingShader.setInt("blurTexture", 1);
 
-	//Material & Lighting Data.
-	float ambientStrength  = 0.2f;
-	float specularStrength = 0.3f;
-	float emissionStrength = 2.0f;
-
 	//Setup PBR Workflow Based on The Environment Map.
 	SetupPBR(m_SpaceHDRTexture);
 
@@ -349,6 +343,13 @@ void SolarSystem::RenderLoop()
 	const char* toneMappings[] = { "Exposure", "Reinhard", "Reinhard 2", "Filmic", "ACES Filmic", "Lottes", "Uchimura", "Uncharted 2", "Unreal", "NONE" };
 	static const char* current_toneMapping = "NONE";
 	float exposure = 2.5f;
+
+	float emissionStrength = 1.0f;
+
+	glm::vec3 lightPosition = glm::vec3(0.0f);
+	glm::vec3 lightColor = glm::vec3(1.0f);
+	float lightIntensity = 50.0f;
+
 
 	while (!glfwWindowShouldClose(m_Window))
 	{
@@ -392,12 +393,13 @@ void SolarSystem::RenderLoop()
 		glFrontFace(GL_CW);
 
 		m_ModelShader.use();
-		m_ModelShader.setFloat("material.emissionStrength", 0.4f);
+		m_ModelShader.setFloat("material.emissionStrength", emissionStrength);
 
 		#pragma region Draw Sun
 		
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
+		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, 0.0f));
 		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.1f));
 		m_Sun.Draw(m_ModelShader, m_ModelMatrix);
 
@@ -508,12 +510,9 @@ void SolarSystem::RenderLoop()
 
 		#pragma region Set Lighting Uniforms
 
-		m_LightShader.setVector3("pointLight.position", 0.0f, 0.0f, 0.0f);
-		m_LightShader.setVector3("pointLight.color", 1.0f, 1.0f, 1.0f);
-		m_LightShader.setFloat("pointLight.intensity", 50.0f);
-
-		m_LightShader.setFloat("pointLight.linear", 0.000001f);
-		m_LightShader.setFloat("pointLight.quadratic", 0.000001f);
+		m_LightShader.setVector3("pointLight.position", lightPosition);
+		m_LightShader.setVector3("pointLight.color", lightColor);
+		m_LightShader.setFloat("pointLight.intensity", lightIntensity);
 
 		m_LightShader.setVector3("viewPos", m_Camera.Position);
 
@@ -609,7 +608,6 @@ void SolarSystem::RenderLoop()
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, m_BloomTexture[!horizontal]);
 		m_PostProcessingShader.use();
-		m_PostProcessingShader.setMat4("view", view);
 		m_PostProcessingShader.setFloat("exposure", exposure);
 		m_PostProcessingShader.setUInt("toneMapping", toneMapping);
 
@@ -654,6 +652,12 @@ void SolarSystem::RenderLoop()
 			ImGui::SliderFloat("Exposure", &exposure, 0.0f, 10.0f);
 
 		ImGui::NewLine();
+
+		ImGui::DragFloat3("Light Position", &lightPosition[0], 0.01f, -1000.0f, 1000.0f, "%.2f");
+		ImGui::ColorEdit3("Light Color", &lightColor[0]);
+		ImGui::DragFloat("Light Intensity", &lightIntensity, 0.01f, 0.0f, 100000000.0f, "%.2f");
+
+		ImGui::DragFloat("Emission Strength", &emissionStrength, 0.01f, 0.0f, 1000.0f, "%.2f");
 
 		ImGui::End();
 

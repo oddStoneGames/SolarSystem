@@ -108,13 +108,13 @@ void Model::loadMesh(unsigned int indMesh)
 	unsigned int hasRoughnessFactor = JSON["materials"][indMesh]["pbrMetallicRoughness"].contains("roughnessFactor");
 	float roughnessFactor = hasRoughnessFactor ? (float)(JSON["materials"][indMesh]["pbrMetallicRoughness"]["roughnessFactor"]) : 0.0f;
 
-	//std::cout << "\n\n" <<JSON["materials"][indMesh]["name"] << "\n"
-	//<< "Emissive Texture Index               :"	<< emissiveTextureIndex << std::endl
-	//<< "Normal Texture Index                 :"	<< normalTextureIndex << std::endl
-	//<< "Base Color Texture Index             :"	<< baseColorTextureIndex << std::endl
-	//<< "Metallic Roughness Texture Index     :"	<< metallicRoughnessTextureIndex << std::endl
-	//<< "Metallic Factor                      :" << metallicFactor << std::endl
-	//<< "Roughness Factor                     :" << roughnessFactor << std::endl;
+	std::cout << "\n" << JSON["meshes"][indMesh]["name"] << "\n" << JSON["materials"][indMesh]["name"] << "\n"
+	<< "Emissive Texture Index               :"	<< emissiveTextureIndex << std::endl
+	<< "Normal Texture Index                 :"	<< normalTextureIndex << std::endl
+	<< "Base Color Texture Index             :"	<< baseColorTextureIndex << std::endl
+	<< "Metallic Roughness Texture Index     :"	<< metallicRoughnessTextureIndex << std::endl
+	<< "Metallic Factor                      :" << metallicFactor << std::endl
+	<< "Roughness Factor                     :" << roughnessFactor << std::endl;
 
 	//Our Convention For Textures Are - 
 	//Base Color - 0, Metallic Roughness - 1, Emissive - 2, Normal - 3
