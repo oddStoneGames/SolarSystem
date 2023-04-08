@@ -48,6 +48,8 @@ private:
 	void RenderQuad();
 	void RenderCube();
 	void SetupPBR(unsigned int hdrTexture);
+
+	void SetCustomImGuiStyle();
 private:
 	///<summary>Screen Width in Screen Coordinates.</summary>
 	unsigned const int SCR_WIDTH = 1280;
@@ -58,9 +60,9 @@ private:
 	unsigned const int SAMPLES = 4;
 
 	///<summary>Camera Near Plane Distance.</summary>
-	const float CAM_NEAR_DIST = 0.01f; // 1 km
+	float m_NearPlane = 0.01f; // 1 km
 	///<summary>Camera Far Plane Distance.</summary>
-	const float CAM_FAR_DIST = 1000.0f; // 1 trillion km
+	float m_FarPlane = 1000.0f; // 1 million km
 
 	///<summary>Buffer width of the window incase the Screen Width is not in Screen Coordinates.</summary>
 	int m_BufferWidth = 0;

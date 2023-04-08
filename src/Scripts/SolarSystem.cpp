@@ -142,10 +142,12 @@ bool SolarSystem::Init()
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
 	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
+	SetCustomImGuiStyle();
 
 	// Setup Platform/Renderer backends
 	const char* glsl_version = "#version 420";
@@ -323,7 +325,7 @@ bool SolarSystem::Init()
 	SetupPBR(m_SpaceHDRTexture);
 
 	//Perform Perspective Projection for our Projection Matrix.
-	m_ProjectionMatrix = perspective(radians(m_Camera.Zoom), (float)m_BufferWidth / (float)m_BufferHeight, CAM_NEAR_DIST, CAM_FAR_DIST);
+	m_ProjectionMatrix = perspective(radians(m_Camera.Zoom), (float)m_BufferWidth / (float)m_BufferHeight, m_NearPlane, m_FarPlane);
 
 	glGenBuffers(1, &m_MatricesUBO);
 	glBindBuffer(GL_UNIFORM_BUFFER, m_MatricesUBO);
@@ -343,13 +345,54 @@ void SolarSystem::RenderLoop()
 	const char* toneMappings[] = { "Exposure", "Reinhard", "Reinhard 2", "Filmic", "ACES Filmic", "Lottes", "Uchimura", "Uncharted 2", "Unreal", "NONE" };
 	static const char* current_toneMapping = "NONE";
 	float exposure = 2.5f;
+	int bloomAmount = 2;
 
 	float emissionStrength = 1.0f;
+
+	float flySpeed = 2.5f;
 
 	glm::vec3 lightPosition = glm::vec3(0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f);
 	float lightIntensity = 50.0f;
 
+	float sunScale = 0.13914f;
+	glm::vec3 sunRotation = glm::vec3(90.0f, 0.0f, 0.0f);
+
+	glm::vec3 mercuryPosition = glm::vec3(0.0f, 0.0f, 57.9f);
+	float mercuryScale = 0.0004879f;
+	glm::vec3 mercuryRotation = glm::vec3(-80.0, -32.0f, 0.0f);
+
+	glm::vec3 venusPosition = glm::vec3(0.0f, 0.0f, 108.2f);
+	float venusScale = 0.0012104f;
+	glm::vec3 venusRotation = glm::vec3(-90.0f, 0.0f, 0.0f);
+
+	glm::vec3 earthPosition = glm::vec3(0.0f, 0.0f, 149.6f);
+	float earthScale = 0.0012756f;
+	glm::vec3 earthRotation = glm::vec3(0.0f, 300.0f, 0.0f);
+
+	glm::vec3 marsPosition = glm::vec3(0.0f, 0.0f, 227.9f);
+	float marsScale = 0.0006792f;
+	glm::vec3 marsRotation = glm::vec3(0.0f);
+
+	glm::vec3 jupiterPosition = glm::vec3(0.0f, 0.0f, 778.6f);
+	float jupiterScale = 0.0142984f;
+	glm::vec3 jupiterRotation = glm::vec3(0.0f);
+
+	glm::vec3 saturnPosition = glm::vec3(0.0f, 0.0f, 1433.5f);
+	float saturnScale = 0.0120536f;
+	glm::vec3 saturnRotation = glm::vec3(0.0f);
+
+	glm::vec3 uranusPosition = glm::vec3(0.0f, 0.0f, 2872.5f);
+	float uranusScale = 0.0051118f;
+	glm::vec3 uranusRotation = glm::vec3(0.0f);
+
+	glm::vec3 neptunePosition = glm::vec3(0.0f, 0.0f, 4495.1f);
+	float neptuneScale = 0.0049528f;
+	glm::vec3 neptuneRotation = glm::vec3(0.0f);
+
+	glm::vec3 plutoPosition = glm::vec3(0.0f, 0.0f, 5906.38f);
+	float plutoScale = 0.0002376f;
+	glm::vec3 plutoRotation = glm::vec3(0.0f);
 
 	while (!glfwWindowShouldClose(m_Window))
 	{
@@ -364,6 +407,9 @@ void SolarSystem::RenderLoop()
 		//Process Input.
 		ProcessInput(m_Window);
 
+		//Update Camera Speed.
+		m_Camera.MovementSpeed = flySpeed;
+
 		#pragma region Deferred Rendering - Geometry Pass
 
 		//Disable Blending.
@@ -375,10 +421,10 @@ void SolarSystem::RenderLoop()
 		//Get Camera View Matrix.
 		mat4 view = m_Camera.GetViewMatrix();
 
-		if (m_CamZoomDirty)
+		if (m_CamZoomDirty || true)
 		{
 			//Perform Perspective Projection for our Projection Matrix With The New Field of View in Mind.
-			m_ProjectionMatrix = perspective(radians(m_Camera.Zoom), (float)m_BufferWidth / (float)m_BufferHeight, CAM_NEAR_DIST, CAM_FAR_DIST);
+			m_ProjectionMatrix = perspective(radians(m_Camera.Zoom), (float)m_BufferWidth / (float)m_BufferHeight, m_NearPlane, m_FarPlane);
 			m_CamZoomDirty = false;
 		}
 
@@ -400,7 +446,10 @@ void SolarSystem::RenderLoop()
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
 		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, 0.0f));
-		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.1f));
+		m_ModelMatrix = scale(m_ModelMatrix, vec3(sunScale));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(sunRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(sunRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(sunRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		m_Sun.Draw(m_ModelShader, m_ModelMatrix);
 
 		#pragma endregion
@@ -409,8 +458,11 @@ void SolarSystem::RenderLoop()
 
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
-		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, -1.0f));
-		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.01f));
+		m_ModelMatrix = translate(m_ModelMatrix, mercuryPosition);
+		m_ModelMatrix = scale(m_ModelMatrix, vec3(mercuryScale));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(mercuryRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(mercuryRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(mercuryRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		m_Mercury.Draw(m_ModelShader, m_ModelMatrix);
 
 		#pragma endregion
@@ -419,8 +471,11 @@ void SolarSystem::RenderLoop()
 
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
-		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, 1.0f));
-		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.01f));
+		m_ModelMatrix = translate(m_ModelMatrix, venusPosition);
+		m_ModelMatrix = scale(m_ModelMatrix, vec3(venusScale));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(venusRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(venusRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(venusRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		m_Venus.Draw(m_ModelShader, m_ModelMatrix);
 
 		#pragma endregion
@@ -429,8 +484,11 @@ void SolarSystem::RenderLoop()
 
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
-		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, -2.0f));
-		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.01f));
+		m_ModelMatrix = translate(m_ModelMatrix, earthPosition);
+		m_ModelMatrix = scale(m_ModelMatrix, vec3(earthScale));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(earthRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(earthRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(earthRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		m_Earth.Draw(m_ModelShader, m_ModelMatrix);
 
 		#pragma endregion
@@ -439,8 +497,11 @@ void SolarSystem::RenderLoop()
 
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
-		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, 2.0f));
-		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.01f));
+		m_ModelMatrix = translate(m_ModelMatrix, marsPosition);
+		m_ModelMatrix = scale(m_ModelMatrix, vec3(marsScale));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(marsRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(marsRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(marsRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		m_Mars.Draw(m_ModelShader, m_ModelMatrix);
 
 		#pragma endregion
@@ -449,18 +510,28 @@ void SolarSystem::RenderLoop()
 
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
-		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, -3.0f));
-		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.01f));
+		m_ModelMatrix = translate(m_ModelMatrix, jupiterPosition);
+		m_ModelMatrix = scale(m_ModelMatrix, vec3(jupiterScale));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(jupiterRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(jupiterRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(jupiterRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		m_Jupiter.Draw(m_ModelShader, m_ModelMatrix);
 
 		#pragma endregion
+
+		//TODO: Replace Rings with asteroids that are instanced.
+		// To make sure we draw the rings of Saturn & Uranus.
+		glDisable(GL_CULL_FACE);
 
 		#pragma region Draw Saturn
 
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
-		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, 3.0f));
-		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.01f));
+		m_ModelMatrix = translate(m_ModelMatrix, saturnPosition);
+		m_ModelMatrix = scale(m_ModelMatrix, vec3(saturnScale));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(saturnRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(saturnRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(saturnRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		m_Saturn.Draw(m_ModelShader, m_ModelMatrix);
 
 		#pragma endregion
@@ -469,18 +540,26 @@ void SolarSystem::RenderLoop()
 
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
-		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, -4.0f));
-		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.01f));
+		m_ModelMatrix = translate(m_ModelMatrix, uranusPosition);
+		m_ModelMatrix = scale(m_ModelMatrix, vec3(uranusScale));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(uranusRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(uranusRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(uranusRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		m_Uranus.Draw(m_ModelShader, m_ModelMatrix);
 
 		#pragma endregion
+
+		glEnable(GL_CULL_FACE);
 
 		#pragma region Draw Neptune
 
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
-		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, 4.0f));
-		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.01f));
+		m_ModelMatrix = translate(m_ModelMatrix, neptunePosition);
+		m_ModelMatrix = scale(m_ModelMatrix, vec3(neptuneScale));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(neptuneRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(neptuneRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(neptuneRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		m_Neptune.Draw(m_ModelShader, m_ModelMatrix);
 
 		#pragma endregion
@@ -489,8 +568,11 @@ void SolarSystem::RenderLoop()
 
 		// Sun is at the origin and its radius is 696,340 km, our models have a 5 meter radius.
 		m_ModelMatrix = mat4(1.0f);
-		m_ModelMatrix = translate(m_ModelMatrix, vec3(0.0f, 0.0f, 5.0f));
-		m_ModelMatrix = scale(m_ModelMatrix, vec3(0.01f));
+		m_ModelMatrix = translate(m_ModelMatrix, plutoPosition);
+		m_ModelMatrix = scale(m_ModelMatrix, vec3(plutoScale));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(plutoRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(plutoRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_ModelMatrix = rotate(m_ModelMatrix, glm::radians(plutoRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		m_Pluto.Draw(m_ModelShader, m_ModelMatrix);
 
 		#pragma endregion
@@ -556,7 +638,7 @@ void SolarSystem::RenderLoop()
 		glBlitFramebuffer(0, 0, m_BufferWidth, m_BufferHeight, 0, 0, m_BufferWidth, m_BufferHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 		m_BloomShader.use();
-		for (int i = 0; i < 2 * 2; ++i)
+		for (int i = 0; i < 2 * bloomAmount; ++i)
 		{
 			//Bind Bloom FBO for Further Blurring of Brightness Texture.
 			glBindFramebuffer(GL_FRAMEBUFFER, m_BloomFBO[horizontal]);
@@ -651,6 +733,14 @@ void SolarSystem::RenderLoop()
 		if (toneMapping == 0)
 			ImGui::SliderFloat("Exposure", &exposure, 0.0f, 10.0f);
 
+		ImGui::DragInt("Bloom Amount", &bloomAmount);
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat("Fly Speed", &flySpeed, 0.01f, 0.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Near Plane", &m_NearPlane, 0.01f, 0.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Far Plane", &m_FarPlane, 0.01f, 0.0f, 1000000000.0f, "%.2f");
+
 		ImGui::NewLine();
 
 		ImGui::DragFloat3("Light Position", &lightPosition[0], 0.01f, -1000.0f, 1000.0f, "%.2f");
@@ -658,6 +748,67 @@ void SolarSystem::RenderLoop()
 		ImGui::DragFloat("Light Intensity", &lightIntensity, 0.01f, 0.0f, 100000000.0f, "%.2f");
 
 		ImGui::DragFloat("Emission Strength", &emissionStrength, 0.01f, 0.0f, 1000.0f, "%.2f");
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat("Sun Scale", &sunScale, 0.01f, 0.0f, 100000000.0f, "%.8f");
+		ImGui::DragFloat3("Sun Rotation", &sunRotation[0], 0.01f, -360.0f, 360.0f, "%.2f");
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat3("Mercury Position", &mercuryPosition[0], 0.01f, -100000000.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Mercury Scale", &mercuryScale, 0.01f, 0.0f, 100000000.0f, "%.8f");
+		ImGui::DragFloat3("Mercury Rotation", &mercuryRotation[0], 0.01f, -360.0f, 360.0f, "%.2f");
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat3("Venus Position", &venusPosition[0], 0.01f, -100000000.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Venus Scale", &venusScale, 0.01f, 0.0f, 100000000.0f, "%.8f");
+		ImGui::DragFloat3("Venus Rotation", &venusRotation[0], 0.01f, -360.0f, 360.0f, "%.2f");
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat3("Earth Position", &earthPosition[0], 0.01f, -100000000.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Earth Scale", &earthScale, 0.01f, 0.0f, 100000000.0f, "%.8f");
+		ImGui::DragFloat3("Earth Rotation", &earthRotation[0], 0.01f, -360.0f, 360.0f, "%.2f");
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat3("Mars Position", &marsPosition[0], 0.01f, -100000000.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Mars Scale", &marsScale, 0.01f, 0.0f, 100000000.0f, "%.8f");
+		ImGui::DragFloat3("Mars Rotation", &marsRotation[0], 0.01f, -360.0f, 360.0f, "%.2f");
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat3("Jupiter Position", &jupiterPosition[0], 0.01f, -100000000.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Jupiter Scale", &jupiterScale, 0.01f, 0.0f, 100000000.0f, "%.8f");
+		ImGui::DragFloat3("Jupiter Rotation", &jupiterRotation[0], 0.01f, -360.0f, 360.0f, "%.2f");
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat3("Saturn Position", &saturnPosition[0], 0.01f, -100000000.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Saturn Scale", &saturnScale, 0.01f, 0.0f, 100000000.0f, "%.8f");
+		ImGui::DragFloat3("Saturn Rotation", &saturnRotation[0], 0.01f, -360.0f, 360.0f, "%.2f");
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat3("Uranus Position", &uranusPosition[0], 0.01f, -100000000.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Uranus Scale", &uranusScale, 0.01f, 0.0f, 100000000.0f, "%.8f");
+		ImGui::DragFloat3("Uranus Rotation", &uranusRotation[0], 0.01f, -360.0f, 360.0f, "%.2f");
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat3("Neptune Position", &neptunePosition[0], 0.01f, -100000000.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Neptune Scale", &neptuneScale, 0.01f, 0.0f, 100000000.0f, "%.8f");
+		ImGui::DragFloat3("Neptune Rotation", &neptuneRotation[0], 0.01f, -360.0f, 360.0f, "%.2f");
+
+		ImGui::NewLine();
+
+		ImGui::DragFloat3("Pluto Position", &plutoPosition[0], 0.01f, -100000000.0f, 1000000000.0f, "%.2f");
+		ImGui::DragFloat("Pluto Scale", &plutoScale, 0.01f, 0.0f, 100000000.0f, "%.8f");
+		ImGui::DragFloat3("Pluto Rotation", &plutoRotation[0], 0.01f, -360.0f, 360.0f, "%.2f");
+
+		ImGui::NewLine();
 
 		ImGui::End();
 
@@ -1241,6 +1392,77 @@ void SolarSystem::SetupPBR(unsigned int hdrTexture)
 
 	//Set PBR Initialized as True.
 	m_PbrInitialized = true;
+}
+
+/// @brief Custom Styling for ImGui
+/// Credits: https://github.com/malamanteau
+void SolarSystem::SetCustomImGuiStyle()
+{
+	ImGuiStyle& style = ImGui::GetStyle();
+	ImVec4* colors = style.Colors;
+
+	colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+	colors[ImGuiCol_TextDisabled] = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+	colors[ImGuiCol_ChildBg] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+	colors[ImGuiCol_WindowBg] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+	colors[ImGuiCol_PopupBg] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+	colors[ImGuiCol_Border] = ImVec4(0.12f, 0.12f, 0.12f, 0.71f);
+	colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
+	colors[ImGuiCol_FrameBg] = ImVec4(0.42f, 0.42f, 0.42f, 0.54f);
+	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.42f, 0.42f, 0.42f, 0.40f);
+	colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.56f, 0.67f);
+	colors[ImGuiCol_TitleBg] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
+	colors[ImGuiCol_TitleBgActive] = ImVec4(0.22f, 0.22f, 0.22f, 1.00f);
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.17f, 0.17f, 0.17f, 0.90f);
+	colors[ImGuiCol_MenuBarBg] = ImVec4(0.335f, 0.335f, 0.335f, 1.000f);
+	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.24f, 0.24f, 0.24f, 0.53f);
+	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
+	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.52f, 0.52f, 0.52f, 1.00f);
+	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.76f, 0.76f, 0.76f, 1.00f);
+	colors[ImGuiCol_CheckMark] = ImVec4(0.65f, 0.65f, 0.65f, 1.00f);
+	colors[ImGuiCol_SliderGrab] = ImVec4(0.52f, 0.52f, 0.52f, 1.00f);
+	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.64f, 0.64f, 0.64f, 1.00f);
+	colors[ImGuiCol_Button] = ImVec4(0.54f, 0.54f, 0.54f, 0.35f);
+	colors[ImGuiCol_ButtonHovered] = ImVec4(0.52f, 0.52f, 0.52f, 0.59f);
+	colors[ImGuiCol_ButtonActive] = ImVec4(0.76f, 0.76f, 0.76f, 1.00f);
+	colors[ImGuiCol_Header] = ImVec4(0.38f, 0.38f, 0.38f, 1.00f);
+	colors[ImGuiCol_HeaderHovered] = ImVec4(0.47f, 0.47f, 0.47f, 1.00f);
+	colors[ImGuiCol_HeaderActive] = ImVec4(0.76f, 0.76f, 0.76f, 0.77f);
+	colors[ImGuiCol_Separator] = ImVec4(0.000f, 0.000f, 0.000f, 0.137f);
+	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.700f, 0.671f, 0.600f, 0.290f);
+	colors[ImGuiCol_SeparatorActive] = ImVec4(0.702f, 0.671f, 0.600f, 0.674f);
+	colors[ImGuiCol_ResizeGrip] = ImVec4(0.26f, 0.59f, 0.98f, 0.25f);
+	colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
+	colors[ImGuiCol_ResizeGripActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
+	colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+	colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+	colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+	colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+	colors[ImGuiCol_TextSelectedBg] = ImVec4(0.73f, 0.73f, 0.73f, 0.35f);
+	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+	colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
+	colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+	colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+	colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+
+	style.PopupRounding = 3;
+
+	style.WindowPadding = ImVec2(4, 4);
+	style.FramePadding = ImVec2(6, 4);
+	style.ItemSpacing = ImVec2(6, 2);
+
+	style.ScrollbarSize = 18;
+
+	style.WindowBorderSize = 1;
+	style.ChildBorderSize = 1;
+	style.PopupBorderSize = 1;
+	style.FrameBorderSize = 0;
+
+	style.WindowRounding = 3;
+	style.ChildRounding = 3;
+	style.FrameRounding = 3;
+	style.ScrollbarRounding = 2;
+	style.GrabRounding = 3;
 }
 
 int main()
